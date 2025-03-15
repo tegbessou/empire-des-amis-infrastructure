@@ -1,0 +1,39 @@
+service: empire-des-amis-infrastructure
+
+image: tegbessou/empire-des-amis-infrastructure
+
+servers:
+  web:
+     hosts:
+        - 5.189.149.68
+     options:
+       user: root
+       health-cmd: "curl -ksf -H 'Host: empire-des-amis.com' http://localhost/dashboard/ || exit 1"
+
+proxy:
+  ssl: true
+  host: empire-des-amis.com
+  forward_headers: true
+  healthcheck:
+    interval: 10
+    path: /dashboard/
+    timeout: 30
+
+registry:
+  username: tegbessou
+  password:
+    - KAMAL_REGISTRY_PASSWORD
+
+builder:
+  arch: amd64
+  context: .
+  dockerfile: ./docker/traefik/Dockerfile
+  remote: ssh://root@5.189.149.68
+
+ssh:
+  user: root
+  keys_only: false
+  keys: [ "~/.ssh/id_rsa" ]
+
+volumes:
+  - /var/run/docker.sock:/var/run/docker.sock

@@ -1,0 +1,6 @@
+all:
+  children:
+    empire_des_amis:
+      hosts:
+        main:
+          ansible_host: "{{ vault_public_ip_main }}"

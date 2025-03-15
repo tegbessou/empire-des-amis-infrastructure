@@ -1,0 +1,5 @@
+- name: install empire des amis infrastructures
+  hosts: all
+  become: true
+  roles:
+    - security

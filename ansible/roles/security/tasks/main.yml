@@ -1,0 +1,71 @@
+#SPDX-License-Identifier: MIT-0
+---
+# tasks file for roles/security
+- name: Update packages
+  ansible.builtin.apt:
+    update_cache: yes
+    upgrade: full
+
+- name: Installer les outils nécessaires
+  ansible.builtin.apt:
+    name:
+      - ufw
+      - fail2ban
+      - unattended-upgrades
+      - curl
+    state: present
+
+- name: Installer UFW
+  ansible.builtin.apt:
+    name: ufw
+    state: present
+    update_cache: yes
+
+- name: By default refuse all incoming connections
+  ansible.builtin.shell: ufw default deny incoming
+
+- name: By default allow all outgoing connections
+  ansible.builtin.shell: ufw default allow outgoing
+
+- name: Autorize SSH connections
+  ansible.builtin.shell: ufw allow OpenSSH
+
+- name: Autorize HTTP and HTTPS connections
+  ansible.builtin.shell:
+    cmd: >
+      ufw allow 80/tcp &&
+      ufw allow 443/tcp
+
+- name: Enable with force UFW
+  ansible.builtin.shell: ufw --force enable
+
+- name: Configure Fail2Ban
+  ansible.builtin.copy:
+    dest: /etc/fail2ban/jail.local
+    content: |
+      [DEFAULT]
+      bantime = 10m
+      findtime = 10m
+      maxretry = 5
+      destemail = root@localhost
+      action = %(action_mwl)s
+      
+      [sshd]
+      enabled = true
+      port = ssh
+
+- name: Restart Fail2ban to apply configuration
+  ansible.builtin.service:
+    name: fail2ban
+    state: restarted
+
+- name: Disable connection with login/password for SSH
+  ansible.builtin.copy:
+    dest: /etc/ssh/sshd_config
+    content: |
+      PasswordAuthentication no
+
+- name: Restart SSH
+  service:
+    name: ssh
+    state: restarted
