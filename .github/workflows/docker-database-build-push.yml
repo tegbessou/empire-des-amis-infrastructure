@@ -1,9 +1,10 @@
+.github/workflows/docker-database-build-push.yml
 name: Build and Push Docker Image
 
 on:
   push:
     branches:
-      - develop
+      - main
   workflow_dispatch:
 
 jobs:
