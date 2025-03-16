@@ -1,5 +1,7 @@
-#!/bin/bash
+docker/db/create-users-and-databases.sh#!/bin/bash
 set -e
+
+source .env
 
 sleep 10
 
