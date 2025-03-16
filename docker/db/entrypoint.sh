@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-/docker-entrypoint.sh "$@" &
+/usr/local/bin/docker-entrypoint.sh "$@" &
 MYSQL_PID=$!
 
 while ! mysqladmin ping --silent; do
