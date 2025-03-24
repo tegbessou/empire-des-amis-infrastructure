@@ -1,4 +1,4 @@
-name: Deploy Redis
+name: Deploy RabbitMQ
 
 on:
   workflow_dispatch:
@@ -16,5 +16,9 @@ jobs:
           ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
 
       - name: Deploy with kamal
+        env:
+          KAMAL_REGISTRY_PASSWORD: ${{ secrets.KAMAL_REGISTRY_PASSWORD }}
+          RABBITMQ_DEFAULT_USER: ${{ secrets.RABBITMQ_DEFAULT_USER }}
+          RABBITMQ_DEFAULT_PASSWORD: ${{ secrets.RABBITMQ_DEFAULT_PASSWORD }}
         run: |
-          kamal accessory reboot redis 
+          kamal accessory reboot rabbitmq 

@@ -1,4 +1,4 @@
-name: Deploy MongoDB
+name: Deploy Traefik
 
 on:
   workflow_dispatch:
@@ -19,4 +19,4 @@ jobs:
         env:
           KAMAL_REGISTRY_PASSWORD: ${{ secrets.KAMAL_REGISTRY_PASSWORD }}
         run: |
-          kamal accessory reboot mongodb 
+          kamal deploy
